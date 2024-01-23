@@ -1,0 +1,13 @@
+[package]
+name = "opus_tag"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+thiserror = "1.0"
+itertools = "0.12"
+crc = "3.0"
+common = { git = "https://github.com/NilsJochem/rust-common" }
+momo = "0.2"
