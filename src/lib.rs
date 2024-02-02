@@ -24,6 +24,8 @@
     clippy::missing_panics_doc
 )]
 
+use common::require;
+
 pub mod error;
 pub mod opus_tagger;
 
@@ -58,16 +60,6 @@ impl error::Error {
         data.read_exact(&mut buf)?;
         Self::expect_starts_with(&buf, expect)
     }
-}
-
-/// used as drop in replacement for assert, when an Error needs to be returned
-#[macro_export]
-macro_rules! require {
-    ($cond:expr, $err:expr) => {
-        if !$cond {
-            return Err($err);
-        }
-    };
 }
 
 struct MultiChain<Iter: Iterator> {
