@@ -190,7 +190,7 @@ impl OggPage {
             .iter()
             .map(|size| {
                 let mut segment = vec![0; *size as usize];
-                data.read_exact(&mut segment).map(|_| segment)
+                data.read_exact(&mut segment).map(|()| segment)
             })
             .collect::<Result<Vec<_>, _>>()?;
 

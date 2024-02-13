@@ -306,6 +306,10 @@ pub struct OpusMeta {
     pub tags: VorbisComment,
 }
 impl OpusMeta {
+    /// reads `Self` from `path`
+    ///
+    /// # Errors
+    /// when `data` doesn't start with a valid `OpusHead` and `VorbisComment`
     pub fn read_from<R: Read>(data: R) -> Result<Self, error::Error> {
         let mut iter = OggPage::iterate_read(data);
         let head = OpusHead::from(
@@ -321,6 +325,11 @@ impl OpusMeta {
         )?;
         Ok(Self { head, tags })
     }
+    /// reads `Self` from `path`
+    ///
+    /// # Errors
+    /// when the read errors
+    /// when [`Self::read_from`] errors
     pub fn read_from_file(path: impl AsRef<Path>) -> Result<Self, error::Error> {
         let file = std::fs::File::open(path)?;
         Self::read_from(file)
@@ -367,7 +376,7 @@ mod tests {
                     vec![
                         ("TITLE", "Das Amulett der Mumie"),
                         ("ALBUM", "Gruselkabinett"),
-                        ("GENRE", "Hörbuch"),
+                        ("GENRE", "H\u{f6}rbuch"),
                         ("TRACKNUMBER", "2"),
                         ("TOTALTRACKS", "182"),
                         ("ARTIST", "Bram Stoker "),
@@ -384,7 +393,7 @@ mod tests {
                 )
             },
             OpusMeta::read_from_file("./res/local/tag_test_small.opus").unwrap()
-        )
+        );
     }
 
     #[test]
@@ -402,26 +411,26 @@ mod tests {
                 tags: VorbisComment::new(
                     "Lavf60.3.100",
                     vec![
-                        ("TITLE", "Das Amulett der Mumie 1 mit einer Menge extra um ein Ogg Page overflow zu provozieren, dazu weden insgesamt mindestens 255 Zeichen in allen tags benötigt"),
+                        ("TITLE", "Das Amulett der Mumie 1 mit einer Menge extra um ein Ogg Page overflow zu provozieren, dazu weden insgesamt mindestens 255 Zeichen in allen tags ben\u{f6}tigt"),
                         ("ARTIST", "Bram Stoker"),
-                        ("ALBUMARTIST", "alle felder sollten gefüllt sein"),
+                        ("ALBUMARTIST", "alle felder sollten gef\u{fc}llt sein"),
                         ("ALBUM", "Gruselkabinett"),
                         ("DISCNUMBER", "02"),
                         ("DATE", "2004"),
                         ("TRACKNUMBER", "01"),
                         ("TRACKTOTAL", "00"),
-                        ("GENRE", "Hörbuch"),
-                        ("DESCRIPTION", "alle felder sollten gefüllt sein"),
-                        ("COMPOSER", "alle felder sollten gefüllt sein"),
-                        ("PERFORMER", "alle felder sollten gefüllt sein"),
-                        ("COPYRIGHT", "alle felder sollten gefüllt sein"),
-                        ("CONTACT", "alle felder sollten gefüllt sein"),
-                        ("ENCODED-BY", "alle felder sollten gefüllt sein")
+                        ("GENRE", "H\u{f6}rbuch"),
+                        ("DESCRIPTION", "alle felder sollten gef\u{fc}llt sein"),
+                        ("COMPOSER", "alle felder sollten gef\u{fc}llt sein"),
+                        ("PERFORMER", "alle felder sollten gef\u{fc}llt sein"),
+                        ("COPYRIGHT", "alle felder sollten gef\u{fc}llt sein"),
+                        ("CONTACT", "alle felder sollten gef\u{fc}llt sein"),
+                        ("ENCODED-BY", "alle felder sollten gef\u{fc}llt sein")
                     ],
                 )
             },
             OpusMeta::read_from_file("./res/local/tag_test_long.opus").unwrap()
-        )
+        );
     }
 
     #[test]
@@ -436,7 +445,7 @@ mod tests {
             "something new",
             vec![
                 ("TITLE", "erstmal weniger daten"),
-                ("ARTIST", "ein paar felder sollten länger werden"),
+                ("ARTIST", "ein paar felder sollten l\u{e4}nger werden"),
             ],
         );
 
